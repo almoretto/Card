@@ -18,6 +18,7 @@ namespace CardExtractTreatment
             Console.WriteLine("ou caracteres especiais recomendamos que seja");
             Console.WriteLine(@"colocado na pasta c:\temp\extrato.csv!");
             Console.WriteLine("=============================================");
+            Console.Write("Caminho: ");
             string path = @"" + Console.ReadLine();
 
             //Instances of lines of the file, and the class that will get the data
@@ -39,8 +40,8 @@ namespace CardExtractTreatment
                     while (!sr.EndOfStream)
                     {
                         lines.Add(sr.ReadLine().Split(";"));
-
                     }
+                    lines.RemoveAt(0);
                 }
                 foreach (string[] l in lines)
                 {
@@ -72,7 +73,7 @@ namespace CardExtractTreatment
             }
             try
             {
-                string targetPath = Path.GetDirectoryName(path) + @"\Proc" + DateTime.Now.ToString("ddMMyyyyhhmm") + ".csv";
+                string targetPath = Path.GetDirectoryName(path) + @"\Proc" + DateTime.Now.ToString("ddMMyyyyHHmm") + ".csv";
 
                 using (StreamWriter sw = File.AppendText(targetPath))
                 {
@@ -93,13 +94,14 @@ namespace CardExtractTreatment
                     sb.Append("TaxaAdm;");
                     sb.Append("Autorizacao;");
                     sb.Append("ValorLiquidoDaParcela;");
+                    sb.Append("DataDeCredito");
                     sb.Append("ParcelaAtual");
                     sw.WriteLine(sb.ToString());
                     //Data
+                    sb.Clear();
                     foreach (SafraPayEx sp in sPF)
                     {
-                        
-                        for (int i = 1; i <= sp.ExPL; i++)
+                        if (sp.ExPL==0)
                         {
                             sb.Append(sp.ExT.ToString() + ";");
                             sb.Append(sp.ExEC.ToString() + ";");
@@ -112,14 +114,42 @@ namespace CardExtractTreatment
                             sb.Append(sp.Modalidade + ";");
                             sb.Append(sp.ExPL.ToString() + ";");
                             sb.Append(sp.ExNCAR.ToString() + ";");
-                            sb.Append((sp.ValorBruto / sp.ExPL).ToString("F2", CultureInfo.CurrentCulture) + ";");
+                            sb.Append((sp.ValorBruto).ToString("F2", CultureInfo.CurrentCulture) + ";");
                             sb.Append(sp.TaxaAdm.ToString("F2", CultureInfo.CurrentCulture) + ";");
                             sb.Append(sp.Autori + ";");
-                            sb.Append((sp.ValorLiquido / sp.ExPL).ToString("F2", CultureInfo.CurrentCulture) + ";");
-                            sb.Append(i.ToString() + "/" + sp.ExPL);
+                            sb.Append((sp.ValorLiquido).ToString("F2", CultureInfo.CurrentCulture) + ";");
+                            sb.Append(sp.DataVenda.AddDays(1).ToString("d", CultureInfo.CurrentCulture) + ";");
+                            sb.Append(sp.ExPL.ToString());
                             sw.WriteLine(sb.ToString());
+                            sb.Clear();
+                        }
+                        else
+                        {
+                            for (int i = 1; i <= sp.ExPL; i++)
+                            {
+                                sb.Append(sp.ExT.ToString() + ";");
+                                sb.Append(sp.ExEC.ToString() + ";");
+                                sb.Append(sp.AAAAMM + ";");
+                                sb.Append(sp.Terminal + ";");
+                                sb.Append(sp.DataVenda.ToString("d", CultureInfo.CurrentCulture) + ";");
+                                sb.Append(sp.Hora.ToString("T", CultureInfo.CurrentCulture) + ";");
+                                sb.Append(sp.NSU + ";");
+                                sb.Append(sp.Produto + ";");
+                                sb.Append(sp.Modalidade + ";");
+                                sb.Append(sp.ExPL.ToString() + ";");
+                                sb.Append(sp.ExNCAR.ToString() + ";");
+                                sb.Append((sp.ValorBruto / sp.ExPL).ToString("F2", CultureInfo.CurrentCulture) + ";");
+                                sb.Append(sp.TaxaAdm.ToString("F2", CultureInfo.CurrentCulture) + ";");
+                                sb.Append(sp.Autori + ";");
+                                sb.Append((sp.ValorLiquido / sp.ExPL).ToString("F2", CultureInfo.CurrentCulture) + ";");
+                                sb.Append(sp.DataVenda.AddMonths(i).ToString("d", CultureInfo.CurrentCulture) + ";");
+                                sb.Append(i.ToString());
+                                sw.WriteLine(sb.ToString());
+                                sb.Clear();
+                            }
                         }
                         
+
                     }
                     sw.WriteLine("Total de Regiatros" + sPF.Count.ToString());
                 }

@@ -40,5 +40,7 @@ namespace CardExtractTreatment.Entities
             Autori = autori;
             ValorLiquido = (1 - taxaAdm / 100) * valorBruto;
         }
+
+
     }
 }
