@@ -19,9 +19,12 @@ namespace CardExtractTreatment.Entities
         public double TaxaAdm { get; set; }
         public string Autori { get; set; }
         public double ValorLiquidoParcela { get; set; }
+        public DateTime DataDeCredito { get; set; }
+        public int ParcelaAtual { get; set; }
 
-        public ConciliationEx(int conT, int conEC, string aAAAMM, string terminal, DateTime dataVenda, DateTime hora, string nSU,
-            string produto, string modalidade, int conParcela, int conNCAR, double valorBrutoParcela, double taxaAdm, string autori)
+        public ConciliationEx(int conT, int conEC, string aAAAMM, string terminal, DateTime dataVenda, DateTime hora, string nSU, 
+            string produto, string modalidade, int conParcela, int conNCAR, double valorBrutoParcela, double taxaAdm, string autori, 
+            double valorLiquidoParcela, DateTime dataDeCredito, int parcelaAtual)
         {
             ConT = conT;
             ConEC = conEC;
@@ -37,7 +40,9 @@ namespace CardExtractTreatment.Entities
             ValorBrutoParcela = valorBrutoParcela;
             TaxaAdm = taxaAdm;
             Autori = autori;
-            ValorLiquidoParcela = (1 - taxaAdm / 100) * valorBrutoParcela;
+            ValorLiquidoParcela = valorLiquidoParcela;
+            DataDeCredito = dataDeCredito;
+            ParcelaAtual = parcelaAtual;
         }
     }
 }

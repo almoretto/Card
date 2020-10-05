@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace CardExtractTreatment.Entities
 {
     class SafraPayEx
