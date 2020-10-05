@@ -17,7 +17,8 @@ namespace CardExtractTreatment.Services
 
 
         //temp variables to initiate Classes
-        int exT, exEC, exPL, exNCAR, retriveDays = 0;
+        int exT, exEC, exPL, exNCAR;
+        static int retriveDays = 0;
         string aAAAMM, terminal, nSU, produto, modalidade, autori;
         DateTime dataVenda, hora, dataDeCredito, tempData;
         double valorBruto, taxaAdm, valorLiqParc, valorBrutoParcela;
@@ -38,7 +39,7 @@ namespace CardExtractTreatment.Services
                 aAAAMM = l[2];
                 terminal = l[3];
                 dataVenda = DateTime.Parse(l[4], CultureInfo.CurrentCulture);
-                hora = DateTime.Parse(l[5],CultureInfo.CurrentCulture);
+                hora = DateTime.Parse(l[5], CultureInfo.CurrentCulture);
                 nSU = l[6];
                 produto = l[7];
                 modalidade = l[8];
@@ -55,14 +56,15 @@ namespace CardExtractTreatment.Services
         }
         public void CreateConciliation(List<SafraPayEx> extract)
         {
+            retriveDays = 0;
             ConciliationEx ex;
             foreach (SafraPayEx line in extract)
             {
                 if (line.ExPL == 0)
                 {
                     valorLiqParc = (1 - line.TaxaAdm / 100) * line.ValorBruto;
-                    dataDeCredito = DateVerify(line.DataVenda.AddDays(1), retriveDays);
-                    
+                    dataDeCredito = DateVerify(line.DataVenda.AddDays(1));
+
                     ex = new ConciliationEx(line.ExT, line.ExEC, line.AAAAMM, line.Terminal, line.DataVenda,
                         line.Hora, line.NSU, line.Produto, line.Modalidade, line.ExPL, line.ExNCAR, line.ValorBruto, line.TaxaAdm,
                         line.Autori, valorLiqParc, dataDeCredito, 1);
@@ -70,13 +72,13 @@ namespace CardExtractTreatment.Services
                 }
                 else
                 {
-                    retriveDays = 0;
+
                     tempData = line.DataVenda;
                     for (int i = 1; i <= line.ExPL; i++)
                     {
                         valorBrutoParcela = line.ValorBruto / line.ExPL;
                         valorLiqParc = (1 - line.TaxaAdm / 100) * valorBrutoParcela;
-                        dataDeCredito = DateVerify(tempData.AddDays(30-retriveDays), retriveDays);
+                        dataDeCredito = DateVerify(tempData.AddDays(30 - retriveDays));
                         tempData = dataDeCredito;
 
                         ex = new ConciliationEx(line.ExT, line.ExEC, line.AAAAMM, line.Terminal, line.DataVenda,
@@ -91,7 +93,7 @@ namespace CardExtractTreatment.Services
 
         }
 
-        static DateTime DateVerify(DateTime date, int retriveDays)
+        static DateTime DateVerify(DateTime date)
         {
             HashSet<DateTime> holydays = new HashSet<DateTime>
             {

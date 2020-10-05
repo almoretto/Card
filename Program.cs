@@ -39,6 +39,7 @@ namespace CardExtractTreatment
                 Console.WriteLine();
                 //Write
                 lines.WriteFile(path, processFile.Conciliations);
+                Console.WriteLine("Arquivo convertido com sucesso!");
             }
             catch (IOException e)
             {
@@ -46,7 +47,7 @@ namespace CardExtractTreatment
                 Console.WriteLine(e.Message);
                 Console.ReadLine();
             }
-            Console.WriteLine("Arquivo convertido com sucesso!");
+            
 
         }
     }
