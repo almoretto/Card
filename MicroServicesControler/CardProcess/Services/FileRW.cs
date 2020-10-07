@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using CardExtractTreatment.Entities;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Globalization;
+using MicroServicesControler.CardProcess.Entities;
 
-namespace CardExtractTreatment.Services
+namespace MicroServicesControler.CardProcess.Services
 {
     class FileRW
     {
@@ -16,7 +16,7 @@ namespace CardExtractTreatment.Services
             using FileStream fs = new FileStream(path, FileMode.Open);
             using (StreamReader sr = new StreamReader(fs))
             {
-                Console.Write("Lendo Arquivo.");
+               
                 while (!sr.EndOfStream)
                 {
                     lines.Add(sr.ReadLine().Split(';'));
@@ -35,7 +35,7 @@ namespace CardExtractTreatment.Services
         }
         //Writing Method parameter: File Path and List of processed records ConciliantionEx, output void, 
         //creates file in same folder with name Proc[DateHour].csv
-        public void WriteFile(string path, List<ConciliationEx> cEx)
+        public string WriteFile(string path, List<ConciliationEx> cEx)
         {
             string targetPath = Path.GetDirectoryName(path) + @"\Proc" + DateTime.Now.ToString("ddMMyyyyHHmm") + ".csv";
 
@@ -62,7 +62,6 @@ namespace CardExtractTreatment.Services
             sw.WriteLine(sb.ToString());
             //Data
             sb.Clear();
-            Console.Write("Escrevendo Arquivo.");
             foreach (ConciliationEx sp in cEx)
             {
                 sb.Append(sp.ConT.ToString() + ";");
@@ -84,12 +83,11 @@ namespace CardExtractTreatment.Services
                 sb.Append(sp.ParcelaAtual.ToString());
                 sw.WriteLine(sb.ToString());
                 sb.Clear();
-                Console.Write(".");
             }
-            Console.WriteLine();
+         
             sw.WriteLine("Total de Regiatros" + cEx.Count.ToString());
-
+            return targetPath;
         }
+
     }
 }
-

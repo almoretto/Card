@@ -1,10 +1,6 @@
 ﻿using System;
 using System.IO;
-using CardExtractTreatment.Entities;
 using CardExtractTreatment.Services;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 
 namespace CardExtractTreatment
 {
