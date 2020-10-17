@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MicroServicesControler.CardProcess.Services;
 
 namespace MicroServicesControler
 {
@@ -18,11 +14,6 @@ namespace MicroServicesControler
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Initial());
-            
-
-
         }
-       
-
     }
 }
